@@ -1,0 +1,11 @@
+\\ indexy wybranych atomow dla roznego rodzaju rozkladu populacji ladunku
+\\ wartosci atomow podawac w nawiazach klamrowych
+
+MuLLiKen = {1,2,3,4, 5,    6}
+eSp = {1,2,3,4}
+nbo = {1,2,3,4}
+
+\\ Area - bok A i B
+a = 13
+b = 14
+r0 = 1

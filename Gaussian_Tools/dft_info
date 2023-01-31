@@ -1,0 +1,14 @@
+%NProcShared=8
+%mem=16gb
+%chk=
+#p b3lyp gen SCF=(xqc,Tight,intrep,NoVarAcc,Maxcycle=512) GFInput
+     IOp(6/7=3) opt   iop(1/6=100)  symm=loose  int=(grid=ultrafine) scrf=(solvent=water)
+
+test
+
+0 1
+---------------------------
+4-31G*
+****
+6-311++G**
+****
