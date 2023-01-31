@@ -43,6 +43,20 @@ def to_xyz(data):
 
 
 if options.all:
+    dft_def = input("Default DFT method [y/N]: ").lower()
+    nProc = 0
+    dft_set = {
+        "nProc": 8,
+        "memory": 16,
+        "charge": 0,
+        "multiplicity": 1,
+        "base": "4-31G*",
+    }
+
+    def changeDFTset(arg):
+        while not arg.isnumeric():
+            arg = input("Enter a numeric value: ")
+        return int(arg)
 
     def save(xyz, path):
         with open(os.path.join(dir, sub_dir1, path), "w") as f:
@@ -63,32 +77,41 @@ if options.all:
             f.write(sub_dir2 + f"={1+len(xyz1)}-{len(xyz2)}\n")
         return 1
 
-    def dft_info(nProc=8, memory=16, charge=1, multiplicity=0, base="4-31G*"):
+    def dft_info(**kwargs):
         with open(os.path.join(dir, sub_dir1, f"dft_info"), "w") as f:
             f.write(
-                f"""%NProcShared={nProc}
-%mem={memory}gb
+                f"""%NProcShared={kwargs['nProc']}
+%mem={kwargs['memory']}gb
 %chk=
 #p b3lyp gen SCF=(xqc,Tight,intrep,NoVarAcc,Maxcycle=512) GFInput
      IOp(6/7=3) charge   iop(1/6=100)  symm=loose  int=(grid=ultrafine) scrf=(solvent=water)
 
 test
 
-{charge} {multiplicity}
+{kwargs['charge']} {kwargs['multiplicity']}
 ---------------------------
-{base}
+{kwargs['base']}
 ****
 """
             )
         return 1
 
-    dft_chek = False
-    dft_def = input("Default DFT method [y/N]: ").lower()
-    nProc = 0
-    if dft_def == "" or dft_info == "y":
-        dft_chek = True
+    if dft_def == "" or dft_def == "y":
+        pass
     else:
-        nProc = int(input("set nProc = "))
+
+        for key in dft_set:
+            quest = input(f"Default {key}? [y/N]".lower())
+            if quest == "y" or quest == "":
+                pass
+            else:
+                answer = input(f"{key} = ")
+                match key:
+                    case "base":
+                        pass
+                    case default:
+                        answer = changeDFTset(answer)
+                dft_set[key] = answer
 
     dir = input("Type the directory name or press Enter: ")
     if dir == "":
@@ -137,10 +160,7 @@ test
             save(xyz_horizontal2, path_horizontal2)
 
             atom_info(xyz_obj1, xyz_rotated)
-            if dft_chek:
-                dft_info()
-            else:
-                dft_info(nProc=nProc)
+            dft_info(**dft_set)
 
 else:
     try:
